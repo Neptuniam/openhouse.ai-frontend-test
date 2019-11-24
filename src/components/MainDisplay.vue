@@ -1,7 +1,7 @@
 <template>
-<div class="test">
+<div>
     <div class="row center-xs fullWidth headerRow" uk-sticky>
-        <div class="col-xs-12 col-md-6 col-lg-3">
+        <div class="col-xs-12 col-md-6 col-lg-3 center-xs">
             Image
         </div>
 
@@ -17,12 +17,11 @@
             Average Price
         </div>
 
-        <div class="col-xs-12 col-md-6 col-lg-1">
+        <div class="col-xs">
         </div>
     </div>
 
-    <!-- Use the communities id and avg price as the key to ensure it updates on changes -->
-    <div v-for="community in communities" :key="community.id+community.avgPrice" class="communityRow">
+    <div v-for="community in communities" :key="community.id" class="communityRow">
         <div class="row center-xs middle-xs fullWidth ">
             <div class="col-xs-12 col-md-6 col-lg-3 column">
                 <div v-if="community.imgUrl">
@@ -39,18 +38,13 @@
             </div>
 
             <div class="col-xs-12 col-md-6 col-lg-2 column start-lg">
-                {{community.avgPrice ? community.avgPrice : "Loading"}}
+                {{community.avgPrice != undefined ? community.avgPrice : "Loading"}}
             </div>
 
             <div class="col-xs-12 col-md-6 col-lg-1 column">
-                <div v-if="community.homes">
-                    <button v-if="!community.showDetails" type="button" class="uk-button-primary" @click="toggleHomeDetails(community)">
-                        Show Homes
-                    </button>
-                    <button v-else type="button" class="uk-button-primary" @click="toggleHomeDetails(community)">
-                        Hide Homes
-                    </button>
-                </div>
+                <button v-if="community.homes" type="button" class="uk-button-primary" @click="toggleHomeDetails(community)">
+                    {{community.showDetails ? 'Hide' : 'Show'}} Homes
+                </button>
             </div>
         </div>
 
@@ -64,7 +58,6 @@
                     {{index+1}}: {{home.type}} - {{home.area}} sqft - {{toDisplayNum(home.price)}}
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -76,6 +69,8 @@ export default {
     methods: {
         toggleHomeDetails(community) {
             community.showDetails = !community.showDetails
+
+            // Disgusting but VueJS refuses to be reactive
             this.$forceUpdate()
         },
 
@@ -91,8 +86,8 @@ export default {
         }
     },
     mounted: function() {
-        // On mount, we both the response to both requests
-        // Itterate over all communities
+        // On mount, we have the response to both requests
+        // Iterate over all communities
         for (let community of this.communities) {
             // Ensure the object has an id attribute
             if (community.id != undefined) {
@@ -101,8 +96,9 @@ export default {
 
                 // Will fail on any falsy value (i.e. length == undefined or length == 0)
                 if (communityHomes.length) {
-                    // Store the filter list in the community object to display ot suer
+                    // Store the filter list in the community object to display to user
                     community.homes = communityHomes
+                    community.showDetails = false
 
                     let avg = this.sum(communityHomes, 'price') / communityHomes.length
 
@@ -116,10 +112,10 @@ export default {
                     console.log('No Homes found for: ', community);
                     community.avgPrice = "N/A"
                 }
-
             }
         }
 
+        // Disgusting but VueJS refuses to be reactive
         this.$forceUpdate()
     },
 }

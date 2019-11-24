@@ -8,8 +8,8 @@ Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
 
 // Register all Vue components here for global access and cleaner code.
-// Usually this is it's own file but I don't have many components and this is easier.
-Vue.component('MainDisplay',        require('./components/MainDisplay.vue').default);
+// Usually this is it's own file but I don't have many components and this is simpler.
+Vue.component('MainDisplay', require('./components/MainDisplay.vue').default);
 
 
 new Vue({
