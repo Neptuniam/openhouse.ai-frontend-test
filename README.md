@@ -27,3 +27,15 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+### Dependencies
+axios - used for making rest requests
+
+CDNS
+Uikit CSS framework
+Flexbox grid system
+
+
+## Notes
+Decided to not display properties of just Home as it vastly limited results
