@@ -69,9 +69,6 @@ export default {
     methods: {
         toggleHomeDetails(community) {
             community.showDetails = !community.showDetails
-
-            // Disgusting but VueJS refuses to be reactive
-            this.$forceUpdate()
         },
 
         toDisplayNum(num) {
@@ -97,26 +94,24 @@ export default {
                 // Will fail on any falsy value (i.e. length == undefined or length == 0)
                 if (communityHomes.length) {
                     // Store the filter list in the community object to display to user
-                    community.homes = communityHomes
-                    community.showDetails = false
+                    // $set will create setters and getters in order to make the vue project properly responsive
+                    this.$set(community, 'homes', communityHomes)
+                    this.$set(community, 'showDetails', false)
 
                     let avg = this.sum(communityHomes, 'price') / communityHomes.length
 
                     if (avg) {
-                        community.avgPrice = this.toDisplayNum(avg)
+                        this.$set(community, 'avgPrice', this.toDisplayNum(avg))
                     } else {
                         console.error("Could not calculate average price for: ", community);
-                        community.avgPrice = "N/A"
+                        this.$set(community, 'avgPrice', "N/A")
                     }
                 } else {
                     console.log('No Homes found for: ', community);
-                    community.avgPrice = "N/A"
+                    this.$set(community, 'avgPrice', "N/A")
                 }
             }
         }
-
-        // Disgusting but VueJS refuses to be reactive
-        this.$forceUpdate()
     },
 }
 </script>
